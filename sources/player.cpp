@@ -3,7 +3,7 @@
 //
 #include <string>
 #include "player.hpp"
-#include "stdexcept"
+#include <stdexcept>
 
 using namespace std;
 namespace ariel {
@@ -12,6 +12,7 @@ namespace ariel {
         this->stack_size = 0;
         this->cards_taken = 0;
         this->win_rate = 0;
+        this->total_wins = 0;
         this->deck = NULL;
     }
 
@@ -20,6 +21,7 @@ namespace ariel {
         this->stack_size = 0;
         this->cards_taken = 0;
         this->win_rate = 0;
+        this->total_wins = 0;
         this->deck = NULL;
     }
 
@@ -29,6 +31,10 @@ namespace ariel {
 
     void Player::setRate(double rate) {
         this->win_rate = rate;
+    }
+
+    void Player::setTotalWins(int wins) {
+        this->total_wins = wins;
     }
 
     string Player::getName() {
@@ -55,13 +61,15 @@ namespace ariel {
         return this->win_rate;
     }
 
+    int Player::getTotalWins() {
+        return this->total_wins;
+    }
+
     Card *Player::getDeck() {
-        if (stack_size > 0) {
-            stack_size--;
-            return this->deck++;
-        } else {
+        if (stack_size < 0) {
             throw invalid_argument("Player Has No Cards Left.");
         }
+        return this->deck;
     }
 
     void Player::setDeck(Card *cards) {

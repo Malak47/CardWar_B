@@ -14,9 +14,10 @@ using namespace std;
 namespace ariel {
     class Game {
     private:
-
+        string number[13]{"2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"};
+        string symbol[4]{"♥", "♦", "♠", "♣"};
         Player &player1, &player2;
-        short winner;
+        short winnerPerRound;
         Card p1Deck[26];
         Card p2Deck[26];
         int p1 = 0, p2 = 0, curr = 0;
@@ -46,11 +47,11 @@ namespace ariel {
 
         Card *createCards(Card deck[]);
 
-        void setWinner(short winner);
+/*        void setWinner(short winner);
 
-        short getWinner();
+        short getWinner();*/
 
-        short CheckWhichCardWins(Card p1Card, Card p2Card);
+        void CheckWhichCardWins(Card p1Card, Card p2Card);
 
         void setp1Deck(Card card);
 

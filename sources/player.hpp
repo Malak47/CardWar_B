@@ -16,6 +16,7 @@ namespace ariel {
         string name;
         int stack_size;
         int cards_taken;
+        int total_wins;
         double win_rate;
         Card *deck;
     public:
@@ -42,6 +43,10 @@ namespace ariel {
         void setDeck(Card *cards);
 
         Card* getDeck();
+
+        void setTotalWins(int wins);
+
+        int getTotalWins();
     };
 }
 #endif //S_S_B_2A_PLAYER_H

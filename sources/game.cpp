@@ -13,15 +13,16 @@ using namespace std;
 
 
 namespace ariel {
-    string number[]{"2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"};
-    string symbol[]{"Hearts♥", "Diamonds♦", "Spades♠", "Clubs♣"};
+    //string number[]{"2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"};
+    //string symbol[]{"Hearts♥", "Diamonds♦", "Spades♠", "Clubs♣"};
+//    string symbol[]{"♥", "♦", "♠", "♣"};
 
     Game::Game() : player1(*new Player()), player2(*new Player()) {
         player1.setName("Player1");
         player2.setName("Player2");
         player1.setStackSize(26);
         player2.setStackSize(26);
-        winner = 0;
+        winnerPerRound = 0;
     }
 
     Game::Game(Player &player1, Player &player2) : player1(player1), player2(player2) {
@@ -29,53 +30,69 @@ namespace ariel {
         this->player2 = player2;
         player1.setStackSize(26);
         player2.setStackSize(26);
-        winner = 0;
+        winnerPerRound = 0;
     }
 
-    void Game::playAll() { return; }
+    void Game::playAll() {
+        while (player1.stacksize() > 0 && player1.stacksize() > 0) {
+            playTurn();
+
+        }
+    }
 
     void Game::playTurn() {
+        this->setp1Deck(player1.getDeck()[curr]);
+        this->setp2Deck(player2.getDeck()[curr]);
+
         Errors();
         bool exit = isValidPlayer(&player1) || isValidPlayer(&player2);
         if (!exit) {
+            throw invalid_argument("===============> ERROR:: Invalid Players Parameters  <===============");
+        }
+        if (player1.stacksize() <= 0 || player2.stacksize() <= 0) {
             throw invalid_argument("===============> ERROR:: Invalid Players Parameters  <===============");
         }
 
         if (player1.stacksize() > 0 && player2.stacksize() > 0) {
             player1.setStackSize(player1.stacksize() - 1);
             player2.setStackSize(player2.stacksize() - 1);
-            cout << getp1Deck()->getNumber() << "--" << getp2Deck()->getNumber() << "\n";
-            cout << this->getp1Deck()[curr].getNumber() << "    ---   " << this->getp1Deck()[curr].getNumber() << "\n";
-
-            short check = CheckWhichCardWins(this->getp1Deck()[curr], this->getp2Deck()[curr]);
-
-            cout << this->getp1Deck()[curr].getNumber() << "    ---   " << this->getp1Deck()[curr].getNumber() << "\n";
-
+            CheckWhichCardWins(this->getp1Deck()[curr], this->getp2Deck()[curr]);
+            cout << player1.getDeck()[curr].getNumber() << " " << winnerPerRound << " " << player2.getDeck()[curr].getNumber() << "-\n";
             this->curr = curr + 1;
-
-            cout << check << "\n";
-
-
-        }
-
-
-        /*if (player1.stacksize() == 0 && player2.stacksize() == 0) {
-
-            while (player1.cardesTaken() == player2.cardesTaken()) {
-                setWinner(0);
+            //Draw but still has cards.
+            if (winnerPerRound == 0 && player1.stacksize() > 2 && player2.stacksize() > 2) {
+                //Skip round
+                this->setp1Deck(player1.getDeck()[curr]);
+                this->setp2Deck(player2.getDeck()[curr]);
+                player1.setStackSize(player1.stacksize() - 1);
+                player2.setStackSize(player2.stacksize() - 1);
+                cout << player1.getDeck()[curr].getNumber() << " " << winnerPerRound << " " << player2.getDeck()[curr].getNumber() << "--\n";
+                this->curr = curr + 1;
+                playTurn();
+            } else if (winnerPerRound == 0 && player1.stacksize() < 2 && player2.stacksize() < 2) {
                 Game game(player1, player2);
+                cout << player1.getDeck()[curr].getNumber() << " " << winnerPerRound << " " << player2.getDeck()[curr].getNumber() << "---\n";
+
                 game.playAll();
             }
+
         }
-        if (player1.cardesTaken() > player2.cardesTaken()) {
-            setWinner(1);
-        } else {
-            setWinner(2);
-        }*/
+            // Draw -> new game
+        else if (player1.stacksize() == 0 && player2.stacksize() == 0 &&
+                 player1.cardesTaken() == player2.cardesTaken()) {
+            winnerPerRound = 0;
+            Game game(player1, player2);
+            game.playAll();
+        }
 
     }
 
-    short Game::CheckWhichCardWins(Card p1Card, Card p2Card) {
+/*    void Game::startGame(){
+        this->setp1Deck(player1.getDeck()[curr]);
+        this->setp2Deck(player2.getDeck()[curr]);
+
+    }*/
+    void Game::CheckWhichCardWins(Card p1Card, Card p2Card) {
         int p1IndexVal = 0, p2IndexVal = 0, i = 0;
 
         while (i < 13) {
@@ -93,21 +110,17 @@ namespace ariel {
             }
             i++;
         }
-        cout << this->getp1Deck()[curr].getNumber() << "    ---   " << this->getp1Deck()[curr].getNumber() << "\n";
-        cout << p1IndexVal << "\n";
-        cout << p2IndexVal << "\n";
         if (p1IndexVal == 12 && p2IndexVal == 0) {
-            winner = 2;
+            winnerPerRound = 2;
         } else if (p1IndexVal == 0 && p2IndexVal == 12) {
-            winner = 1;
+            winnerPerRound = 1;
         } else if (p1IndexVal > p2IndexVal) {
-            winner = 1;
+            winnerPerRound = 1;
         } else if (p1IndexVal < p2IndexVal) {
-            winner = 2;
+            winnerPerRound = 2;
         } else {
-            winner = 0;
+            winnerPerRound = 0;
         }
-        return winner;
     }
 
     void Game::setp1Deck(Card card) {
@@ -156,13 +169,13 @@ namespace ariel {
         k = 0;
         cout << "PLAYER1" << "\n";
         while (k < 26) {
-            cout << p1_cards[k].getNumber() << "-" << p1_cards[k].getSymbol() << " ";
+            cout << p1_cards[k].getNumber() << "" << p1_cards[k].getSymbol() << " ";
             k++;
         }
         k = 0;
-        cout << "PLAYER2" << "\n";
+        cout << "\n" << "PLAYER2" << "\n";
         while (k < 26) {
-            cout << p2_cards[k].getNumber() << "-" << p2_cards[k].getSymbol() << " ";
+            cout << p2_cards[k].getNumber() << "" << p2_cards[k].getSymbol() << " ";
             k++;
         }
         cout << "\n";
@@ -174,17 +187,6 @@ namespace ariel {
 
     }
 
-/*void Game::Errors() {
-    Player *pPlayer1 = &player1;
-    Player *pPlayer2 = &player2;
-    if (!pPlayer1 || !pPlayer2 || player1.stacksize() > 26 || player2.stacksize() > 26 ||
-        player1.stacksize() < 0 || player2.stacksize() < 0 || pPlayer1 == pPlayer2 ||
-        player1.cardesTaken() > 52 || player2.cardesTaken() > 52 || player1.cardesTaken() < 0 ||
-        player2.cardesTaken() < 0 || player1.getRate() < 0 || player2.getRate() < 0 ||
-        player1.getName().empty() || player2.getName().empty() || player1.stacksize() != player2.stacksize()) {
-        throw invalid_argument("===============> ERROR OCCURS ! <===============");
-    }
-}*/
     void Game::Errors() {
         if (!isValidPlayer(&player1)) {
             throw invalid_argument("===============> ERROR:: Invalid Player 1 <===============");
@@ -210,8 +212,6 @@ namespace ariel {
     }
 
     Card *Game::createCards(Card deck[]) {
-//        string number[]{"A", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"};
-//        string symbol[]{"Hearts♥", "Diamonds♦", "Spades♠", "Clubs♣"};
         int i = 0, j = 0, k = 0;
         while (i < 4) {
             while (j < 13) {
@@ -223,12 +223,12 @@ namespace ariel {
         return deck;
     }
 
-    void Game::setWinner(short winner) {
-        this->winner = winner;
+/*    void Game::setWinner(short winner) {
+        this->winnerPerRound = winner;
     }
 
     short Game::getWinner() {
-        return this->winner;
-    }
+        return this->winnerPerRound;
+    }*/
 
 }

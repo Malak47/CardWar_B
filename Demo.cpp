@@ -9,22 +9,27 @@
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
+
 using namespace std;
 
 #include "sources/player.hpp"
 #include "sources/game.hpp"
 #include "sources/card.hpp"
+
 using namespace ariel;
 
 int main() {
-  // Create two players with their names
-   Player p1("Alice");
-   Player p2("Bob");
+    // Create two players with their names
+    Player p1("Alice");
+    Player p2("Bob");
 
-   Game game(p1,p2);
-//   for (int i=0;i<5;i++) {
-//    game.playTurn();
-//   }
+    Game game(p1, p2);
+    game.shuffleDeck();
+
+    /*for (int i = 0; i < 5; i++) {
+        game.playTurn();
+
+    }*/
 //   game.printLastTurn(); // print the last turn stats. For example:
 //                                                    // Alice played Queen of Hearts Bob played 5 of Spades. Alice wins.
 //                                                    // Alice played 6 of Hearts Bob played 6 of Spades. Draw. Alice played 10 of Clubs Bob played 10 of Diamonds. draw. Alice played Jack of Clubs Bob played King of Diamonds. Bob wins.
@@ -35,6 +40,6 @@ int main() {
 //   game.printLog(); // prints all the turns played one line per turn (same format as game.printLastTurn())
 //   game.printStats();// for each player prints basic statistics: win rate, cards won, <other stats you want to print>. Also print the draw rate and amount of draws that happand. (draw within a draw counts as 2 draws. )
 
-    game.shuffleDeck();
+    game.playAll();
 
 }
