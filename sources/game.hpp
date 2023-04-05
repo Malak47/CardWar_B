@@ -14,13 +14,15 @@ using namespace std;
 namespace ariel {
     class Game {
     private:
-        string number[13]{"2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"};
-        string symbol[4]{"♥", "♦", "♠", "♣"};
+        string number[13]{"2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"};
+        string symbol[4]{"Hearts", "Spades", "Clubs", "Diamonds"};
         Player &player1, &player2;
         short winnerPerRound;
         Card p1Deck[26];
         Card p2Deck[26];
-        int p1 = 0, p2 = 0, curr = 0;
+        int p1 = 0, p2 = 0, curr = 0, logIndex = 0, drawAmount = 0, drawRate = 0;
+        string log[26];
+        string str = "";
 
     public:
         Game();

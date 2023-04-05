@@ -12,7 +12,7 @@ namespace ariel {
         this->stack_size = 0;
         this->cards_taken = 0;
         this->win_rate = 0;
-        this->total_wins = 0;
+        this->total_round_wins = 0;
         this->deck = NULL;
     }
 
@@ -21,7 +21,7 @@ namespace ariel {
         this->stack_size = 0;
         this->cards_taken = 0;
         this->win_rate = 0;
-        this->total_wins = 0;
+        this->total_round_wins = 0;
         this->deck = NULL;
     }
 
@@ -33,8 +33,8 @@ namespace ariel {
         this->win_rate = rate;
     }
 
-    void Player::setTotalWins(int wins) {
-        this->total_wins = wins;
+    void Player::updateTotalRoundWins() {
+        this->total_round_wins++;
     }
 
     string Player::getName() {
@@ -45,8 +45,8 @@ namespace ariel {
         this->stack_size = size;
     }
 
-    void Player::setCardsTaken(int cardsTaken) {
-        this->cards_taken = cardsTaken;
+    void Player::updateCardsTaken() {
+        this->cards_taken++;
     }
 
     int Player::stacksize() {
@@ -61,8 +61,8 @@ namespace ariel {
         return this->win_rate;
     }
 
-    int Player::getTotalWins() {
-        return this->total_wins;
+    int Player::getTotalRoundWins() {
+        return this->total_round_wins;
     }
 
     Card *Player::getDeck() {

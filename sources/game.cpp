@@ -8,14 +8,12 @@
 #include <random>
 #include <algorithm>
 #include "iostream"
+#include <iomanip>
 
 using namespace std;
 
 
 namespace ariel {
-    //string number[]{"2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"};
-    //string symbol[]{"Hearts♥", "Diamonds♦", "Spades♠", "Clubs♣"};
-//    string symbol[]{"♥", "♦", "♠", "♣"};
 
     Game::Game() : player1(*new Player()), player2(*new Player()) {
         player1.setName("Player1");
@@ -23,6 +21,7 @@ namespace ariel {
         player1.setStackSize(26);
         player2.setStackSize(26);
         winnerPerRound = 0;
+
     }
 
     Game::Game(Player &player1, Player &player2) : player1(player1), player2(player2) {
@@ -36,14 +35,23 @@ namespace ariel {
     void Game::playAll() {
         while (player1.stacksize() > 0 && player1.stacksize() > 0) {
             playTurn();
-
         }
     }
 
     void Game::playTurn() {
         this->setp1Deck(player1.getDeck()[curr]);
         this->setp2Deck(player2.getDeck()[curr]);
-
+        if (winnerPerRound == 0) {
+            str += player1.getName() + " played " + player1.getDeck()[curr].getNumber() + " of " +
+                   player1.getDeck()[curr].getSymbol() + " " +
+                   player2.getName() + " played " + player2.getDeck()[curr].getNumber() + " of "
+                   + player2.getDeck()[curr].getSymbol() + ".";
+        } else {
+            str = player1.getName() + " played " + player1.getDeck()[curr].getNumber() + " of " +
+                  player1.getDeck()[curr].getSymbol() + " " +
+                  player2.getName() + " played " + player2.getDeck()[curr].getNumber() + " of "
+                  + player2.getDeck()[curr].getSymbol() + ".";
+        }
         Errors();
         bool exit = isValidPlayer(&player1) || isValidPlayer(&player2);
         if (!exit) {
@@ -56,8 +64,9 @@ namespace ariel {
         if (player1.stacksize() > 0 && player2.stacksize() > 0) {
             player1.setStackSize(player1.stacksize() - 1);
             player2.setStackSize(player2.stacksize() - 1);
+
             CheckWhichCardWins(this->getp1Deck()[curr], this->getp2Deck()[curr]);
-            cout << player1.getDeck()[curr].getNumber() << " " << winnerPerRound << " " << player2.getDeck()[curr].getNumber() << "-\n";
+
             this->curr = curr + 1;
             //Draw but still has cards.
             if (winnerPerRound == 0 && player1.stacksize() > 2 && player2.stacksize() > 2) {
@@ -66,16 +75,20 @@ namespace ariel {
                 this->setp2Deck(player2.getDeck()[curr]);
                 player1.setStackSize(player1.stacksize() - 1);
                 player2.setStackSize(player2.stacksize() - 1);
-                cout << player1.getDeck()[curr].getNumber() << " " << winnerPerRound << " " << player2.getDeck()[curr].getNumber() << "--\n";
+
                 this->curr = curr + 1;
                 playTurn();
             } else if (winnerPerRound == 0 && player1.stacksize() < 2 && player2.stacksize() < 2) {
                 Game game(player1, player2);
-                cout << player1.getDeck()[curr].getNumber() << " " << winnerPerRound << " " << player2.getDeck()[curr].getNumber() << "---\n";
 
                 game.playAll();
             }
-
+            log[logIndex] = str;
+            if (winnerPerRound != 0) {
+                logIndex++;
+            }
+            player1.setRate((double) (player1.getTotalRoundWins() / logIndex));
+            player2.setRate((double) (player2.getTotalRoundWins() / logIndex));
         }
             // Draw -> new game
         else if (player1.stacksize() == 0 && player2.stacksize() == 0 &&
@@ -87,11 +100,6 @@ namespace ariel {
 
     }
 
-/*    void Game::startGame(){
-        this->setp1Deck(player1.getDeck()[curr]);
-        this->setp2Deck(player2.getDeck()[curr]);
-
-    }*/
     void Game::CheckWhichCardWins(Card p1Card, Card p2Card) {
         int p1IndexVal = 0, p2IndexVal = 0, i = 0;
 
@@ -112,15 +120,29 @@ namespace ariel {
         }
         if (p1IndexVal == 12 && p2IndexVal == 0) {
             winnerPerRound = 2;
+            player2.updateTotalRoundWins();
+            str += " " + player2.getName() + " wins.";
         } else if (p1IndexVal == 0 && p2IndexVal == 12) {
             winnerPerRound = 1;
+            player1.updateCardsTaken();
+            player1.updateTotalRoundWins();
+            str += " " + player1.getName() + " wins.";
         } else if (p1IndexVal > p2IndexVal) {
             winnerPerRound = 1;
+            player1.updateCardsTaken();
+            player1.updateTotalRoundWins();
+            str += " " + player1.getName() + " wins.";
         } else if (p1IndexVal < p2IndexVal) {
             winnerPerRound = 2;
+            player2.updateCardsTaken();
+            player2.updateTotalRoundWins();
+            str += " " + player2.getName() + " wins.";
         } else {
             winnerPerRound = 0;
+            drawAmount++;
+            str += " Draw. ";
         }
+
     }
 
     void Game::setp1Deck(Card card) {
@@ -140,12 +162,40 @@ namespace ariel {
         return this->p2Deck;
     }
 
+// Alice played Queen of Hearts Bob played 5 of Spades. Alice wins.
+// Alice played 6 of Hearts Bob played 6 of Spades. Draw. Alice played 10 of Clubs Bob played 10 of Diamonds. draw. Alice played Jack of Clubs Bob played King of Diamonds. Bob wins.
+    void Game::printLastTurn() {
+        cout << log[logIndex - 1] << "\n";
+    }
 
-    void Game::printLastTurn() { return; }
+// prints all the turns played one line per turn (same format as game.printLastTurn())
+    void Game::printLog() {
+        for (int i = 0; i < logIndex; ++i) {
+            cout << log[i] << "\n";
+        }
+    }
 
-    void Game::printLog() { return; }
+// for each player prints basic statistics: win rate, cards won, <other stats you want to print>. Also print the draw rate and amount of draws that happand. (draw within a draw counts as 2 draws. )
+    void Game::printStats() {
 
-    void Game::printStats() { return; }
+        cout << setw(15) << "Win rate:" << setw(15) << fixed << setprecision(2)
+             << ((player1.cardesTaken() / 26.0) * 100) << "%" << "\n";
+        cout << setw(15) << "Player:" << setw(15) << player1.getName() << "\n";
+        cout << setw(15) << "Cards won:" << setw(15) << player1.cardesTaken() << "\n";
+        cout << setw(15) << "Cards left:" << setw(15) << player1.stacksize() << "\n\n";
+
+
+        cout << setw(15) << "Win rate:" << setw(15) << fixed << setprecision(2)
+             << ((player2.cardesTaken() / 26.0) * 100) << "%" << "\n";
+        cout << setw(15) << "Player:" << setw(15) << player2.getName() << "\n";
+        cout << setw(15) << "Cards won:" << setw(15) << player2.cardesTaken() << "\n";
+        cout << setw(15) << "Cards left:" << setw(15) << player2.stacksize() << "\n\n";
+
+
+        cout << setw(15) << "Draw rate:" << setw(15) << fixed << setprecision(2)
+             << (double)((double)(logIndex - player1.getTotalRoundWins() - player2.getTotalRoundWins()) / logIndex) << "\n";
+        cout << setw(15) << "Amount of Draw:" << setw(15) << drawAmount << "\n\n";
+    }
 
     void Game::printWiner() { return; }
 
@@ -164,27 +214,6 @@ namespace ariel {
 
         player1.setDeck(p1_cards);
         player2.setDeck(p2_cards);
-
-        //PRINT CARDS OF EACH PLAYER !!
-        k = 0;
-        cout << "PLAYER1" << "\n";
-        while (k < 26) {
-            cout << p1_cards[k].getNumber() << "" << p1_cards[k].getSymbol() << " ";
-            k++;
-        }
-        k = 0;
-        cout << "\n" << "PLAYER2" << "\n";
-        while (k < 26) {
-            cout << p2_cards[k].getNumber() << "" << p2_cards[k].getSymbol() << " ";
-            k++;
-        }
-        cout << "\n";
-/*        k = 0;
-        while (k < 26) {
-            cout << player1.getCard()->getNumber();
-            k++;
-        }*/
-
     }
 
     void Game::Errors() {
@@ -222,13 +251,5 @@ namespace ariel {
         }
         return deck;
     }
-
-/*    void Game::setWinner(short winner) {
-        this->winnerPerRound = winner;
-    }
-
-    short Game::getWinner() {
-        return this->winnerPerRound;
-    }*/
 
 }
