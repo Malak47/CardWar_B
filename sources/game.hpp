@@ -20,9 +20,9 @@ namespace ariel {
         short winnerPerRound;
         Card p1Deck[26];
         Card p2Deck[26];
-        int p1 = 0, p2 = 0, curr = 0, logIndex = 0, drawAmount = 0, drawRate = 0;
+        int p1 = 0, p2 = 0, curr = 0, logIndex = 0, drawAmount = 0, numberOfDrawsPerRound = 0;
         string log[26];
-        string str = "";
+        string str;
 
     public:
         Game();
@@ -49,10 +49,6 @@ namespace ariel {
 
         Card *createCards(Card deck[]);
 
-/*        void setWinner(short winner);
-
-        short getWinner();*/
-
         void CheckWhichCardWins(Card p1Card, Card p2Card);
 
         void setp1Deck(Card card);
@@ -62,6 +58,12 @@ namespace ariel {
         Card *getp1Deck();
 
         Card *getp2Deck();
+
+        void saveLog();
+
+        void playRound();
+
+        void myPrint();
     };
 }
 #endif //S_S_B_2A_GAME_H

@@ -46,7 +46,7 @@ namespace ariel {
     }
 
     void Player::updateCardsTaken() {
-        this->cards_taken++;
+        this->cards_taken = cards_taken+2;
     }
 
     int Player::stacksize() {

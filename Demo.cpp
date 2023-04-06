@@ -42,5 +42,6 @@ int main() {
 
     game.playAll();
     game.printStats();
+    cout << "\n" << p1.stacksize() + p1.cardesTaken() + p2.stacksize() + p2.cardesTaken()<<"\n";
 
 }
