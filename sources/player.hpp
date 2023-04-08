@@ -6,9 +6,11 @@
 #define S_S_B_2A_PLAYER_H
 
 #include <string>
+#include <array>
 #include "card.hpp"
 
 using namespace std;
+const int playerCardsNumber = 26;
 
 namespace ariel {
     class Player {
@@ -16,37 +18,44 @@ namespace ariel {
         string name;
         int stack_size;
         int cards_taken;
+        unsigned long playerIterator;
         int total_round_wins;
         double win_rate;
-        Card *deck;
+        //Card initial_cards[playerCardsNumber];
+        array<Card,playerCardsNumber> initial_cards;
     public:
-        Player();
-
         Player(string name);
 
         void setName(string name);
 
-        int stacksize();
-
-        int cardesTaken();
-
         string getName();
 
-        double getRate();
-
-        void setRate(double rate);
-
-        void updateCardsTaken();
+        int stacksize();
 
         void setStackSize(int size);
 
-        void setDeck(Card *cards);
+        int cardesTaken();
+
+        void updateCardsTaken(int num);
+
+        void setRate(double rate);
+
+        double getRate();
+
+        void setDeck(Card card);
+
+        void updatePlayerIterator();
+
+        void resetPlayerIterator();
+
+        Card getCard();
 
         Card* getDeck();
 
         void updateTotalRoundWins();
 
         int getTotalRoundWins();
+
     };
 }
 #endif //S_S_B_2A_PLAYER_H

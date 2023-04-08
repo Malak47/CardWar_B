@@ -5,7 +5,6 @@
 
 namespace ariel {
     Card::Card() {
-
     }
 
     Card::Card(string number, string symbol) {
@@ -26,7 +25,7 @@ namespace ariel {
         this->number = number;
     }
 
-    void Card::setSymbol(std::string symbol) {
+    void Card::setSymbol(string symbol) {
         this->symbol = symbol;
     }
 }

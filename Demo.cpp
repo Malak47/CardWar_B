@@ -24,13 +24,13 @@ int main() {
     Player p2("Bob");
 
     Game game(p1, p2);
-    game.shuffleDeck();
 
-/*    for (int i = 0; i < 5; i++) {
-        game.playTurn();
-
-    }
-    game.printLastTurn();*/ // print the last turn stats. For example:
+//    for (int i = 0; i < 5; i++) {
+//        game.playTurn();
+//        game.myPrint();
+//    }
+   // cout << "\n" << p1.stacksize() + p1.cardesTaken() + p2.stacksize() + p2.cardesTaken()<<"\n";
+//    game.printLastTurn(); // print the last turn stats. For example:
 //                                                    // Alice played Queen of Hearts Bob played 5 of Spades. Alice wins.
 //                                                    // Alice played 6 of Hearts Bob played 6 of Spades. Draw. Alice played 10 of Clubs Bob played 10 of Diamonds. draw. Alice played Jack of Clubs Bob played King of Diamonds. Bob wins.
 //   cout << p1.stacksize() << endl; //prints the amount of cards left. should be 21 but can be less if a draw was played
@@ -41,7 +41,7 @@ int main() {
     //  game.printStats();// for each player prints basic statistics: win rate, cards won, <other stats you want to print>. Also print the draw rate and amount of draws that happand. (draw within a draw counts as 2 draws. )
 
     game.playAll();
+    game.myPrint();
     game.printStats();
-    cout << "\n" << p1.stacksize() + p1.cardesTaken() + p2.stacksize() + p2.cardesTaken()<<"\n";
 
 }

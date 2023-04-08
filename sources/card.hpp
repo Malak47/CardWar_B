@@ -15,6 +15,7 @@ namespace ariel {
     private:
         string symbol;
         string number;
+
     public:
         Card();
 

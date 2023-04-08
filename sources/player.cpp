@@ -4,25 +4,18 @@
 #include <string>
 #include "player.hpp"
 #include <stdexcept>
+#include "iostream"
 
 using namespace std;
 namespace ariel {
-    Player::Player() {
-        this->name = "Unknown" + std::to_string(std::rand() % 10 + 1);  //Giving the player name: Unknown+random number
-        this->stack_size = 0;
-        this->cards_taken = 0;
-        this->win_rate = 0;
-        this->total_round_wins = 0;
-        this->deck = NULL;
-    }
-
     Player::Player(string name) {
         this->name = name;
         this->stack_size = 0;
         this->cards_taken = 0;
         this->win_rate = 0;
         this->total_round_wins = 0;
-        this->deck = NULL;
+        this->playerIterator = 0;
+        //this->initial_cards
     }
 
     void Player::setName(string name) {
@@ -33,20 +26,30 @@ namespace ariel {
         this->win_rate = rate;
     }
 
-    void Player::updateTotalRoundWins() {
-        this->total_round_wins++;
+    void Player::setDeck(Card card) {
+        this->initial_cards[playerIterator++] = card;
     }
-
-    string Player::getName() {
-        return this->name;
+    void Player::updatePlayerIterator(){
+        this->playerIterator++;
+    }
+    void Player::resetPlayerIterator(){
+        this->playerIterator = 0;
     }
 
     void Player::setStackSize(int size) {
         this->stack_size = size;
     }
 
-    void Player::updateCardsTaken() {
-        this->cards_taken = cards_taken+2;
+    void Player::updateTotalRoundWins() {
+        this->total_round_wins++;
+    }
+
+    void Player::updateCardsTaken(int num) {
+        this->cards_taken += num;
+    }
+
+    string Player::getName() {
+        return this->name;
     }
 
     int Player::stacksize() {
@@ -65,14 +68,15 @@ namespace ariel {
         return this->total_round_wins;
     }
 
-    Card *Player::getDeck() {
+    Card Player::getCard() {
         if (stack_size < 0) {
             throw invalid_argument("Player Has No Cards Left.");
         }
-        return this->deck;
+        return this->initial_cards[playerIterator];
     }
 
-    void Player::setDeck(Card *cards) {
-        this->deck = cards;
+
+    Card *Player::getDeck() {
+        return this->initial_cards.data();
     }
 }
