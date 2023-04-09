@@ -56,7 +56,7 @@ namespace ariel {
         } else if (player2.cardesTaken() > player1.cardesTaken()) {
             cout << player2.getName() << "\n";
         } else {
-            cout << "===============> ERROR:: There Is No Winner! <===============\n";
+            cout << "===============> WARNING:: There Is No Winner! <===============\n";
         }
     }
 
