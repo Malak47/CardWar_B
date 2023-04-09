@@ -4,19 +4,25 @@
 
 #ifndef S_S_B_2A_PRINTS_H
 #define S_S_B_2A_PRINTS_H
+
 #include "card.hpp"
 #include "player.hpp"
 #include <string>
-#include "iostream"
-#include <iomanip>
+
 using namespace std;
 
 
 namespace ariel {
+    const int CardsNumber = 26;
+
     class Prints {
     private:
-        int logIndex, drawAmount;
-        string *log, str;
+        int drawAmount;
+        unsigned int logIndex;
+        string str;
+        array<string, CardsNumber> log;
+
+
     public:
         Prints();
 
@@ -24,13 +30,13 @@ namespace ariel {
 
         void printLog();
 
-        void printStats(Player player1, Player player2);
+        void printStats(Player &player1, Player &player2);
 
-        void printWiner(Player player1, Player player2);
+        void printWiner(Player &player1, Player &player2);
 
-        void saveLog(Player player1, Player player2, short winnerPerRound);
+        void saveLog(Player &player1, Player &player2, short winnerPerRound);
 
-        void myPrint(Player player1,Player player2, short winnerPerRound);
+        void myPrint(Player &player1, Player &player2, short winnerPerRound);
 
         string getStr();
 
@@ -40,7 +46,7 @@ namespace ariel {
 
         void updateDrawAmount();
 
-        int getLogIndex();
+        unsigned int getLogIndex();
 
         void updateLogIndex();
 

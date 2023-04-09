@@ -16,13 +16,11 @@ namespace ariel {
     class Player {
     private:
         string name;
-        int stack_size;
-        int cards_taken;
-        unsigned long playerIterator;
-        int total_round_wins;
+        int stack_size, cards_taken, total_round_wins;
+        unsigned int playerIterator;
         double win_rate;
-        //Card initial_cards[playerCardsNumber];
-        array<Card,playerCardsNumber> initial_cards;
+        array<Card, playerCardsNumber> initial_cards;
+
     public:
         Player(string name);
 
@@ -50,7 +48,7 @@ namespace ariel {
 
         Card getCard();
 
-        Card* getDeck();
+        Card *getDeck();
 
         void updateTotalRoundWins();
 

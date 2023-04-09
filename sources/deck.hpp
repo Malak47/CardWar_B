@@ -15,8 +15,7 @@ namespace ariel {
 
     class Deck {
     private:
-        //Card deck[deckCardsNumber];
-        array<Card,deckCardsNumber> deck;
+        array<Card, deckCardsNumber> deck;
 
     public:
         Deck();

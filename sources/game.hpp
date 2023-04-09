@@ -6,7 +6,6 @@
 #define S_S_B_2A_GAME_H
 
 #include "player.hpp"
-#include "card.hpp"
 #include "deck.hpp"
 #include "prints.hpp"
 #include <string>

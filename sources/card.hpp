@@ -13,8 +13,7 @@ namespace ariel {
 
     class Card {
     private:
-        string symbol;
-        string number;
+        string symbol, number;
 
     public:
         Card();

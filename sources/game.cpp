@@ -2,21 +2,15 @@
 // Created by malaklinux on 3/27/23.
 //
 #include "game.hpp"
-#include "card.hpp"
 #include <string>
-#include <stdexcept>
-#include <random>
-#include <algorithm>
 #include "iostream"
-#include <iomanip>
 
 using namespace std;
-
 
 namespace ariel {
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------
-//----------------------------------------------------C O N S T R U C T O R S-----------------------------------------------------------------------
+//----------------------------------------------------C O N S T R U C T O R-------------------------------------------------------------------------
 //--------------------------------------------------------------------------------------------------------------------------------------------------
     Game::Game(Player &player1, Player &player2) : player1(player1), player2(player2) {
         this->player1 = player1;
@@ -27,6 +21,7 @@ namespace ariel {
         setPlayersDecks();
         this->winnerPerRound = 0;
     }
+
 //--------------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -97,12 +92,12 @@ namespace ariel {
                 player1.updateCardsTaken(cardsToAdd);
                 player2.updateCardsTaken(cardsToAdd);
             }
-            //prints.setLog(prints.getStr());
+            prints.setLog(prints.getStr());
             if (winnerPerRound != 0) {
-                //    prints.updateLogIndex();
+                prints.updateLogIndex();
             }
-            //player1.setRate(((double) player1.getTotalRoundWins() / prints.getLogIndex()));
-            //player2.setRate(((double) player2.getTotalRoundWins() / prints.getLogIndex()));
+            player1.setRate(((double) player1.getTotalRoundWins() / prints.getLogIndex()));
+            player2.setRate(((double) player2.getTotalRoundWins() / prints.getLogIndex()));
         } else {
             throw invalid_argument("===============> ERROR:: Invalid Game <===============");
         }
@@ -112,7 +107,7 @@ namespace ariel {
         player1.setStackSize(player1.stacksize() - 1);                                           //stack--
         player2.setStackSize(player2.stacksize() - 1);                                           //stack--
         if (flag) {
-            //prints.saveLog(player1, player2, currentRoundIterator, winnerPerRound);
+            prints.saveLog(player1, player2, winnerPerRound);
             CheckWhichCardWins(player1.getCard(), player2.getCard());
         }
         player1.updatePlayerIterator();                                                             //iter++
@@ -123,7 +118,6 @@ namespace ariel {
 //--------------------------------------------------------------------------------------------------------------------------------------------------
 //----------------------------------------------------Card Deck Functions---------------------------------------------------------------------------
 //--------------------------------------------------------------------------------------------------------------------------------------------------
-
 
     void Game::CheckWhichCardWins(Card p1Card, Card p2Card) {
         int p1IndexVal = 0, p2IndexVal = 0, i = 0;
@@ -146,23 +140,23 @@ namespace ariel {
         if (p1IndexVal == 12 && p2IndexVal == 0) {
             winnerPerRound = 2;
             player2.updateTotalRoundWins();
-//            prints.getStr() += " " + player2.getName() + " wins.";
+            prints.getStr() += " " + player2.getName() + " wins.";
         } else if (p1IndexVal == 0 && p2IndexVal == 12) {
             winnerPerRound = 1;
             player1.updateTotalRoundWins();
-//            prints.getStr() += " " + player1.getName() + " wins.";
+            prints.getStr() += " " + player1.getName() + " wins.";
         } else if (p1IndexVal > p2IndexVal) {
             winnerPerRound = 1;
             player1.updateTotalRoundWins();
-//            prints.getStr() += " " + player1.getName() + " wins.";
+            prints.getStr() += " " + player1.getName() + " wins.";
         } else if (p1IndexVal < p2IndexVal) {
             winnerPerRound = 2;
             player2.updateTotalRoundWins();
-//            prints.getStr() += " " + player2.getName() + " wins.";
+            prints.getStr() += " " + player2.getName() + " wins.";
         } else {
             winnerPerRound = 0;
-//            prints.updateDrawAmount();
-//            prints.getStr() += " Draw. ";
+            prints.updateDrawAmount();
+            prints.getStr() += " Draw. ";
         }
 
     }
@@ -185,8 +179,12 @@ namespace ariel {
         if (player1.cardesTaken() + player2.cardesTaken() > 52) {
             throw invalid_argument("===============> ERROR:: Too Many Cards Have Been Taken <===============");
         }
-        if (&player1 == &player2) {
-            throw invalid_argument("===============> ERROR:: One Player Only In The Game <===============");
+        if (player1.getCard().getNumber() == player2.getCard().getNumber() &&
+            player1.getCard().getSymbol() == player2.getCard().getSymbol()) {
+            throw invalid_argument("===============> ERROR:: Players With The Same Card <===============");
+        }
+        if (addressof(player1) == addressof(player2)) {
+            throw invalid_argument("===============> ERROR:: One Player In The Game <===============");
         }
     }
 
@@ -204,30 +202,36 @@ namespace ariel {
 //----------------------------------------------------P R I N T S-----------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------------------------------------------------------------------------
 
-// Alice played Queen of Hearts Bob played 5 of Spades. Alice wins.
-// Alice played 6 of Hearts Bob played 6 of Spades. Draw. Alice played 10 of Clubs Bob played 10 of Diamonds. draw. Alice played Jack of Clubs Bob played King of Diamonds. Bob wins.
     void Game::printLastTurn() {
-        //       prints.printLastTurn();
+        if (player1.stacksize() > 0 && player2.stacksize() > 0) {
+            cout << "===============> ERROR:: Game Has Not End Yet <===============\n";
+            return;
+        }
+        prints.printLastTurn();
     }
 
-// prints all the turns played one line per turn (same format as game.printLastTurn())
     void Game::printLog() {
-        //       prints.printLog();
+        if (player1.stacksize() == 26 && player2.stacksize() == 26) {
+            cout << "===============> ERROR:: Game Has Not Started Yet <===============\n";
+            return;
+        }
+        prints.printLog();
     }
 
-// for each player prints basic statistics: win rate, cards won, <other stats you want to print>. Also print the draw rate and amount of draws that happand. (draw within a draw counts as 2 draws. )
     void Game::printStats() {
-        //       prints.printStats(player1, player1);
+        if (player1.stacksize() == 26 && player2.stacksize() == 26) {
+            cout << "===============> ERROR:: Game Has Not Started Yet <===============\n";
+            return;
+        }
+        prints.printStats(player1, player2);
     }
 
     void Game::printWiner() {
-        //       prints.printWiner(player1, player2);
+        prints.printWiner(player1, player2);
     }
 
-
     void Game::myPrint() {
-               prints.myPrint(player1, player2, winnerPerRound);
-
+        prints.myPrint(player1, player2, winnerPerRound);
     }
 //--------------------------------------------------------------------------------------------------------------------------------------------------
 

@@ -29,16 +29,15 @@ TEST_CASE("The amount of cards after starting a game")
     CHECK(p2.cardesTaken() == 0);
 }
 
-//TEST_CASE("The card scheme at the end of the game")
-//{
-//    Player p1("Alice");
-//    Player p2("Bob");
-//    Game game(p1, p2);
-//    game.playAll();
-//    int sum = p1.stacksize() + p1.cardesTaken() + p2.stacksize() + p2.cardesTaken();
-//
-//    CHECK(sum == 52);
-//}
+TEST_CASE("The card scheme at the end of the game")
+{
+    Player p1("Alice");
+    Player p2("Bob");
+    Game game(p1, p2);
+    game.playAll();
+    int sum = p1.stacksize() + p1.cardesTaken() + p2.stacksize() + p2.cardesTaken();
+    CHECK(sum == 52);
+}
 
 TEST_CASE("Throwing errors from the functions")
 {
@@ -47,7 +46,7 @@ TEST_CASE("Throwing errors from the functions")
     Game game(p1, p2);
     for (int i = 0; i < 5; i++)
     {
-        game.myPrint();
+        game.playTurn();
     }
     CHECK_NOTHROW(game.printLastTurn());
     CHECK_NOTHROW(game.printLog());

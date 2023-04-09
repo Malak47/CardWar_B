@@ -41,7 +41,8 @@ int main() {
     //  game.printStats();// for each player prints basic statistics: win rate, cards won, <other stats you want to print>. Also print the draw rate and amount of draws that happand. (draw within a draw counts as 2 draws. )
 
     game.playAll();
-    game.myPrint();
+
+    //game.myPrint();
     game.printStats();
 
 }

@@ -4,7 +4,6 @@
 #include <string>
 #include "player.hpp"
 #include <stdexcept>
-#include "iostream"
 
 using namespace std;
 namespace ariel {
@@ -15,7 +14,6 @@ namespace ariel {
         this->win_rate = 0;
         this->total_round_wins = 0;
         this->playerIterator = 0;
-        //this->initial_cards
     }
 
     void Player::setName(string name) {
@@ -74,7 +72,6 @@ namespace ariel {
         }
         return this->initial_cards[playerIterator];
     }
-
 
     Card *Player::getDeck() {
         return this->initial_cards.data();

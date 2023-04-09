@@ -3,8 +3,9 @@
 //
 
 #include "prints.hpp"
-#include "player.hpp"
 #include <string>
+#include "iostream"
+#include <iomanip>
 
 using namespace std;
 
@@ -12,57 +13,54 @@ namespace ariel {
 
     Prints::Prints() {
         this->logIndex = 0;
-        this->log = nullptr;
         this->drawAmount = 0;
         this->str = "";
     }
 
-    // Alice played Queen of Hearts Bob played 5 of Spades. Alice wins.
-// Alice played 6 of Hearts Bob played 6 of Spades. Draw. Alice played 10 of Clubs Bob played 10 of Diamonds. draw. Alice played Jack of Clubs Bob played King of Diamonds. Bob wins.
     void Prints::printLastTurn() {
         cout << log[logIndex - 1] << "\n";
     }
 
-// prints all the turns played one line per turn (same format as game.printLastTurn())
     void Prints::printLog() {
-        for (int i = 0; i < logIndex; ++i) {
+        for (unsigned int i = 0; i < logIndex; ++i) {
             cout << log[i] << "\n";
         }
     }
 
-// for each player prints basic statistics: win rate, cards won, <other stats you want to print>. Also print the draw rate and amount of draws that happand. (draw within a draw counts as 2 draws. )
-    void Prints::printStats(Player player1, Player player2) {
+    void Prints::printStats(Player &player1, Player &player2) {
 
+        cout << setw(15) << "Player:" << setw(15) << player1.getName() << "\n";
         cout << setw(15) << "Win rate:" << setw(15) << fixed << setprecision(2)
              << (double) (player1.getRate() * 100) << "%" << "\n";
-        cout << setw(15) << "Player:" << setw(15) << player1.getName() << "\n";
         cout << setw(15) << "Cards won:" << setw(15) << player1.cardesTaken() << "\n";
         cout << setw(15) << "Cards left:" << setw(15) << player1.stacksize() << "\n\n";
 
 
+        cout << setw(15) << "Player:" << setw(15) << player2.getName() << "\n";
         cout << setw(15) << "Win rate:" << setw(15) << fixed << setprecision(2)
              << (double) (player2.getRate() * 100) << "%" << "\n";
-        cout << setw(15) << "Player:" << setw(15) << player2.getName() << "\n";
         cout << setw(15) << "Cards won:" << setw(15) << player2.cardesTaken() << "\n";
         cout << setw(15) << "Cards left:" << setw(15) << player2.stacksize() << "\n\n";
 
 
         cout << setw(15) << "Draw rate:" << setw(15) << fixed << setprecision(2)
              << (double) ((double) drawAmount / logIndex) * 100 << "%" << "\n";
-        cout << setw(15) << "Amount of Draw:" << setw(15) << drawAmount << "\n\n";
+        cout << setw(15) << "Amount of Draw:" << setw(15) << drawAmount << "\n";
+        cout << setw(15) << "Total cards won:" << setw(15) << player1.cardesTaken() + player2.cardesTaken() << "\n";
+        cout << setw(15) << "Total cards left:" << setw(13) << player1.stacksize() + player2.stacksize() << "\n\n";
     }
 
-    void Prints::printWiner(Player player1, Player player2) {
+    void Prints::printWiner(Player &player1, Player &player2) {
         if (player1.cardesTaken() > player2.cardesTaken()) {
             cout << player1.getName() << "\n";
         } else if (player2.cardesTaken() > player1.cardesTaken()) {
             cout << player2.getName() << "\n";
         } else {
-            throw invalid_argument("===============> ERROR:: There is No Winner <===============");
+            cout << "===============> ERROR:: There Is No Winner! <===============\n";
         }
     }
 
-    void Prints::saveLog(Player player1, Player player2, short winnerPerRound) {
+    void Prints::saveLog(Player &player1, Player &player2, short winnerPerRound) {
         if (winnerPerRound == 0) {
             str += player1.getName() + " played " + player1.getCard().getNumber() + " of " +
                    player1.getCard().getSymbol() + " " +
@@ -76,7 +74,7 @@ namespace ariel {
         }
     }
 
-    void Prints::myPrint(Player player1, Player player2, short winnerPerRound) {
+    void Prints::myPrint(Player &player1, Player &player2, short winnerPerRound) {
         cout << "["
              << player1.getCard().getNumber()
              << ","
@@ -93,7 +91,7 @@ namespace ariel {
     }
 
     string *Prints::getLog() {
-        return this->log;
+        return this->log.data();
     }
 
     int Prints::getDrawAmount() {
@@ -105,7 +103,7 @@ namespace ariel {
 
     }
 
-    int Prints::getLogIndex() {
+    unsigned int Prints::getLogIndex() {
         return this->logIndex;
 
     }
@@ -117,4 +115,5 @@ namespace ariel {
     void Prints::setLog(string appendStr) {
         this->log[logIndex] = appendStr;
     }
+
 }
